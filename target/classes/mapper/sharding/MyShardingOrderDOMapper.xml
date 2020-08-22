@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shardingsphere.dao.sharding.MyShardingOrderDOMapper">
+  <resultMap id="BaseResultMap" type="com.example.shardingsphere.entity.MyShardingOrderDO">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_id, user_id, status, order_no
+  </sql>
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from my_sharding
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from my_sharding
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from my_sharding
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insertWithGenerator" parameterType="com.example.shardingsphere.entity.MyShardingOrderDO">
+    insert into my_sharding (user_id, status,
+      order_no)
+    values ( #{userId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR},
+      #{orderNo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insert" parameterType="com.example.shardingsphere.entity.MyShardingOrderDO">
+    insert into my_sharding (order_id, user_id, status, 
+      order_no)
+    values (#{orderId,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, 
+      #{orderNo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.shardingsphere.entity.MyShardingOrderDO">
+    insert into my_sharding
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="orderNo != null">
+        order_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.shardingsphere.entity.MyShardingOrderDO">
+    update my_sharding
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.shardingsphere.entity.MyShardingOrderDO">
+    update my_sharding
+    set user_id = #{userId,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      order_no = #{orderNo,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+</mapper>

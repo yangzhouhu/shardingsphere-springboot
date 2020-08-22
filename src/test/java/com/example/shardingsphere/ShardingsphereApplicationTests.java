@@ -23,7 +23,7 @@ class ShardingsphereApplicationTests {
 
 
     @Test
-    @Transactional
+//    @Transactional
     void test2() {
         for (Long i = 5L; i < 10; i++) {
             MyShardingOrderDO myShardingOrderDO = new MyShardingOrderDO();
@@ -47,7 +47,7 @@ class ShardingsphereApplicationTests {
             myShardingOrderDO.setOrderNo("第" + i + "单");
             myShardingOrderDOMapper.insertWithGenerator(myShardingOrderDO);
         }
-        System.out.println(1/0);
+//        System.out.println(1/0);
     }
 
 }
