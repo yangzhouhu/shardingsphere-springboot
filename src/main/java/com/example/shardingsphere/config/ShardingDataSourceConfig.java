@@ -7,61 +7,37 @@ import org.apache.shardingsphere.api.config.sharding.KeyGeneratorConfiguration;
 import org.apache.shardingsphere.api.config.sharding.ShardingRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.TableRuleConfiguration;
 import org.apache.shardingsphere.api.config.sharding.strategy.InlineShardingStrategyConfiguration;
-import org.apache.shardingsphere.api.config.sharding.strategy.StandardShardingStrategyConfiguration;
 import org.apache.shardingsphere.shardingjdbc.api.ShardingDataSourceFactory;
-import org.apache.shardingsphere.shardingjdbc.spring.boot.masterslave.SpringBootMasterSlaveRuleConfigurationProperties;
-import org.apache.shardingsphere.shardingjdbc.spring.boot.sharding.SpringBootShardingRuleConfigurationProperties;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
 
 @Configuration
-@AutoConfigureAfter({CommonConfig.class})
-//@EnableConfigurationProperties({SpringBootShardingRuleConfigurationProperties.class, SpringBootMasterSlaveRuleConfigurationProperties.class})
 @MapperScan(basePackages = ShardingDataSourceConfig.PACKAGE, sqlSessionFactoryRef = "shardingSqlSessionFactory")
 public class ShardingDataSourceConfig {
 
     static final String PACKAGE = "com.example.shardingsphere.dao.sharding";
     static final String MAPPER_LOCATION = "classpath:mapper/sharding/*.xml";
-//    @Autowired
-//    private SpringBootShardingRuleConfigurationProperties shardingProperties;
-
-//    @Value("${spring.datasource.sharding.url}")
-//    private String url;
-//
-//    @Value("${spring.datasource.sharding.username}")
-//    private String username;
-//
-//    @Value("${spring.datasource.sharding.password}")
-//    private String password;
-//
-//    @Value("${spring.datasource.sharding.driver-class-name}")
-//    private String driverClass;
 
     @Bean(name = "shardingDataSource")
     public DataSource shardingDataSource() throws SQLException {
-        // 配置真实数据源
-        Map<String, DataSource> dataSourceMap = new HashMap<>();
 
+        Map<String, DataSource> dataSourceMap = new HashMap<>();
         // 配置第一个数据源
         DruidDataSource dataSource1 = new DruidDataSource();
-        dataSource1.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource1.setUrl("jdbc:mysql://49.233.87.32:3306/sharding_1?characterEncoding=utf-8");
         dataSource1.setUsername("root");
         dataSource1.setPassword("yzsydm");
@@ -69,7 +45,7 @@ public class ShardingDataSourceConfig {
 
         // 配置第二个数据源
         DruidDataSource dataSource2 = new DruidDataSource();
-        dataSource2.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource2.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource2.setUrl("jdbc:mysql://49.233.87.32:3306/sharding_2?characterEncoding=utf-8");
         dataSource2.setUsername("root");
         dataSource2.setPassword("yzsydm");
@@ -92,6 +68,7 @@ public class ShardingDataSourceConfig {
         DataSource dataSource = ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfig, getProperties());
         return dataSource;
     }
+
     /**
      * 系统参数配置
      *
@@ -103,19 +80,26 @@ public class ShardingDataSourceConfig {
         return shardingProperties;
     }
     @Bean(name = "shardingTransactionManager")
-    public DataSourceTransactionManager shardingTransactionManager() throws SQLException {
-        return new DataSourceTransactionManager(shardingDataSource());
+    public DataSourceTransactionManager shardingTransactionManager(@Qualifier("shardingDataSource") DataSource dataSource) throws SQLException {
+        return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean(name = "shardingSqlSessionFactory")
-    public SqlSessionFactory shardingSqlSessionFactory(@Qualifier("shardingDataSource") DataSource shardingDataSource)
+    public SqlSessionFactory shardingSqlSessionFactory(@Qualifier("shardingDataSource") DataSource dataSource)
             throws Exception {
-        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
-        sessionFactory.setDataSource(shardingDataSource);
-        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
+        SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource);
+        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver ()
                 .getResources(ShardingDataSourceConfig.MAPPER_LOCATION));
         return sessionFactory.getObject();
     }
+
+    // 创建SqlSessionTemplate
+    @Bean(name = "shardingSqlSessionTemplate")
+    public SqlSessionTemplate shardingSqlSessionTemplate(@Qualifier("shardingSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
 
 //    DataSource getShardingDataSource() {
 //        ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
