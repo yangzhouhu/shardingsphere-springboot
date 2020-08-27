@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
@@ -29,7 +28,7 @@ public class MainDataSourceConfig {
     private String url;
 
     @Value("${spring.datasource.main.username}")
-    private String user;
+    private String username;
 
     @Value("${spring.datasource.main.password}")
     private String password;
@@ -38,12 +37,11 @@ public class MainDataSourceConfig {
     private String driverClass;
 
     @Bean(name = "mainDataSource")
-    @Primary
     public DataSource mainDataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setDriverClassName(driverClass);
         dataSource.setUrl(url);
-        dataSource.setUsername(user);
+        dataSource.setUsername(username);
         dataSource.setPassword(password);
         return dataSource;
     }
@@ -52,18 +50,15 @@ public class MainDataSourceConfig {
     public DataSourceProxy goodsdbDataSourceProxy(@Qualifier("mainDataSource") DataSource dataSource) {
         //DataSourceProxy dsproxy = new DataSourceProxy(dataSource,"my_test_tx_group");
         DataSourceProxy dsproxy = new DataSourceProxy(dataSource,"DEFAULT");
-        //dsproxy.
         return dsproxy;
     }
 
     @Bean(name = "mainTransactionManager")
-    @Primary
     public DataSourceTransactionManager mainTransactionManager(@Qualifier("mainDataSourceProxy")DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
     @Bean(name = "mainSqlSessionFactory")
-    @Primary
     public SqlSessionFactory mainSqlSessionFactory(@Qualifier("mainDataSourceProxy") DataSource dataSource)
             throws Exception {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();

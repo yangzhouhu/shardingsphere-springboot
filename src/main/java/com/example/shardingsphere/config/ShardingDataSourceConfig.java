@@ -12,6 +12,7 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -31,25 +32,68 @@ public class ShardingDataSourceConfig {
     static final String PACKAGE = "com.example.shardingsphere.dao.sharding";
     static final String MAPPER_LOCATION = "classpath:mapper/sharding/*.xml";
 
+    @Value("${spring.shardingsphere.datasource.ds1.url}")
+    private String url1;
+
+    @Value("${spring.shardingsphere.datasource.ds1.username}")
+    private String username1;
+
+    @Value("${spring.shardingsphere.datasource.ds1.password}")
+    private String password1;
+
+    @Value("${spring.shardingsphere.datasource.ds1.driver-class-name}")
+    private String driverClass1;
+
+    @Value("${spring.shardingsphere.datasource.ds2.url}")
+    private String url2;
+
+    @Value("${spring.shardingsphere.datasource.ds2.username}")
+    private String username2;
+
+    @Value("${spring.shardingsphere.datasource.ds2.password}")
+    private String password2;
+
+    @Value("${spring.shardingsphere.datasource.ds2.driver-class-name}")
+    private String driverClass2;
+
     @Bean(name = "shardingDataSource")
     public DataSource shardingDataSource() throws SQLException {
+
+//        Map<String, DataSource> dataSourceMap = new HashMap<>();
+//        // 配置第一个数据源
+//        DruidDataSource dataSource1 = new DruidDataSource();
+//        dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
+//        dataSource1.setUrl("jdbc:mysql://49.233.87.32:3306/sharding_1?characterEncoding=utf-8");
+//        dataSource1.setUsername("root");
+//        dataSource1.setPassword("yzsydm");
+//        dataSourceMap.put("ds1", dataSource1);
+//
+//        // 配置第二个数据源
+//        DruidDataSource dataSource2 = new DruidDataSource();
+//        dataSource2.setDriverClassName("com.mysql.cj.jdbc.Driver");
+//        dataSource2.setUrl("jdbc:mysql://49.233.87.32:3306/sharding_2?characterEncoding=utf-8");
+//        dataSource2.setUsername("root");
+//        dataSource2.setPassword("yzsydm");
+//        dataSourceMap.put("ds2", dataSource2);
+
 
         Map<String, DataSource> dataSourceMap = new HashMap<>();
         // 配置第一个数据源
         DruidDataSource dataSource1 = new DruidDataSource();
-        dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource1.setUrl("jdbc:mysql://49.233.87.32:3306/sharding_1?characterEncoding=utf-8");
-        dataSource1.setUsername("root");
-        dataSource1.setPassword("yzsydm");
+        dataSource1.setDriverClassName(driverClass1);
+        dataSource1.setUrl(url1);
+        dataSource1.setUsername(username1);
+        dataSource1.setPassword(password1);
         dataSourceMap.put("ds1", dataSource1);
 
         // 配置第二个数据源
         DruidDataSource dataSource2 = new DruidDataSource();
-        dataSource2.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource2.setUrl("jdbc:mysql://49.233.87.32:3306/sharding_2?characterEncoding=utf-8");
-        dataSource2.setUsername("root");
-        dataSource2.setPassword("yzsydm");
+        dataSource2.setDriverClassName(driverClass2);
+        dataSource2.setUrl(url2);
+        dataSource2.setUsername(username2);
+        dataSource2.setPassword(password2);
         dataSourceMap.put("ds2", dataSource2);
+
 
         // 配置库表规则
         TableRuleConfiguration orderTableRuleConfig = new TableRuleConfiguration("my_sharding","ds$->{1..2}.my_sharding_$->{1..2}");
@@ -61,8 +105,6 @@ public class ShardingDataSourceConfig {
         // 配置分片规则
         ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
         shardingRuleConfig.getTableRuleConfigs().add(orderTableRuleConfig);
-        // 省略配置order_item表规则...
-        // ...
 
         // 获取数据源对象
         DataSource dataSource = ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingRuleConfig, getProperties());
@@ -142,47 +184,6 @@ public class ShardingDataSourceConfig {
 //            e.printStackTrace();
 //        }
 //        return result;
-//    }
-//////////////////////////////////////////////////////////////////////////////////////////
-//    @Bean(name = "orderdetaildatasource")
-//    @ConfigurationProperties(prefix = "mybusiness.datasource.orderdetail")
-//    public DataSource orderDetailDatasource()  {
-//        return DataSourceBuilder.create().build();
-//    }
-//
-//    /**
-//     * 以mybusinessorderdetail为key，dataSource为value创建map
-//     * 参照 io.shardingsphere.shardingjdbc.spring.boot.SpringBootConfiguration
-//     * 这一步目的是将原始DataSource和我们在配置文件中的分片策略对应起来
-//     * 注意key要和shardingJdbc配置项中的一致
-//     * @return
-//     * @throws SQLException
-//     */
-//    @Bean(name = "shardingDataSource")
-//    public DataSource shardingDataSource() throws SQLException {
-//        Map<String,DataSource> dataSourceMap = new LinkedHashMap<>();
-//        dataSourceMap.put("mybusinessorderdetail", orderDetailDatasource());
-//        return ShardingDataSourceFactory.createDataSource(dataSourceMap, shardingProperties..getShardingRuleConfiguration(), shardingProperties.getConfigMap(), shardingProperties.getProps());}
-//
-//    @Bean(name = "orderDetailDatasourceTransactionManager")
-//    public DataSourceTransactionManager orderDetailDatasourceTransactionManager(){
-//        return new DataSourceTransactionManager(orderDetailDatasource());
-//    }
-//
-//    /**
-//     * 将shardingJdbc创建的DataSource传入这里的SqlSessionFactory
-//     * @return
-//     * @throws Exception
-//     */
-//    @Bean(name = "orderDetailSqlSessionFactory")
-//    public SqlSessionFactory orderDetailSqlSessionFactory() throws Exception {
-//        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
-//        sqlSessionFactory.setDataSource(shardingDataSource());
-//        sqlSessionFactory.setMapperLocations(resolveMapperLocations(environment.getProperty("mybusiness.orderdetail.mapper-locations").split(",")));
-//        GlobalConfig globalConfig = new GlobalConfig();
-//        globalConfig.setDbConfig(new GlobalConfig.DbConfig().setDbType(DbType.MYSQL));
-//        sqlSessionFactory.setGlobalConfig(globalConfig);
-//        return sqlSessionFactory.getObject();
 //    }
 
 }

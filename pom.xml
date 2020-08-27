@@ -22,43 +22,49 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-<!--            &lt;!&ndash;exclude log&ndash;&gt;-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.springframework.boot</groupId>-->
-<!--                    <artifactId>spring-boot-starter-logging</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-jdbc</artifactId>-->
+<!--        </dependency>-->
+
+
+        <!--mybatis for spring boot begin-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.1.3</version>
         </dependency>
+        <!--mybatis for spring boot end-->
 
-        <!-- for spring boot -->
+
+        <!--sharding-jdbc for spring boot begin-->
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
             <version>4.1.0</version>
         </dependency>
+        <!--sharding-jdbc for spring boot end-->
 
-
+        <!--druid for spring boot begin-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.1.23</version>
         </dependency>
+        <!--druid for spring boot end-->
 
+        <!--aop for spring boot begin-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+        <!--aop for spring boot end-->
+
+        <!--分布式事务 begin -->
+
+        <!--sharding-jdbc 分库分表数据源 使用分布式事务 begin -->
 
         <!-- 使用XA事务时，需要引入此模块 -->
 <!--        <dependency>-->
@@ -66,29 +72,35 @@
 <!--            <artifactId>sharding-transaction-xa-core</artifactId>-->
 <!--            <version>4.1.0</version>-->
 <!--        </dependency>-->
-        <!-- 使用seata时，需要引入此模块 -->
-        <dependency>
-            <groupId>io.seata</groupId>
-            <artifactId>seata-all</artifactId>
-            <version>1.3.0</version>
-        </dependency>
 
-        <dependency>
-            <groupId>org.apache.shardingsphere</groupId>
-            <artifactId>sharding-jdbc-spring-namespace</artifactId>
-            <version>4.1.0</version>
-        </dependency>
+        <!-- 使用seata，需要引入此模块 -->
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-transaction-base-seata-at</artifactId>
             <version>4.1.0</version>
         </dependency>
 
+        <!--sharding-jdbc 分库分表数据源 使用分布式事务 end -->
+
+        <!-- 包含非分库分表数据源时,需要seata-datasource-proxy，seata需要引入此模块 -->
+        <dependency>
+            <groupId>io.seata</groupId>
+            <artifactId>seata-all</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+
+        <!--分布式事务 end -->
+
+
+        <!--mysql-driver for spring boot begin-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!--mysql-driver for spring boot end-->
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

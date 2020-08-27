@@ -1,0 +1,10 @@
+com\example\shardingsphere\dao\sharding\MyShardingOrderDOMapper.class
+com\example\shardingsphere\dao\main\OrderDOMapper.class
+com\example\shardingsphere\entity\OrderDO.class
+com\example\shardingsphere\controller\TetsController.class
+com\example\shardingsphere\config\SeataConfig.class
+com\example\shardingsphere\config\SeataFilter.class
+com\example\shardingsphere\ShardingsphereApplication.class
+com\example\shardingsphere\entity\MyShardingOrderDO.class
+com\example\shardingsphere\config\MainDataSourceConfig.class
+com\example\shardingsphere\config\ShardingDataSourceConfig.class

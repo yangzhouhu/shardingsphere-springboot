@@ -1,8 +1,7 @@
 package com.example.shardingsphere.dao.sharding;
 
 import com.example.shardingsphere.entity.MyShardingOrderDO;
-import com.example.shardingsphere.entity.OrderDO;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
