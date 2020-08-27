@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.Random;
 
 /**
@@ -42,8 +43,15 @@ public class TetsController {
         myShardingOrderDO.setStatus("主键自增测试" + 1);
         myShardingOrderDO.setUserId(1L);
         myShardingOrderDO.setOrderNo("第" + 1 + "单");
-        TransactionTypeHolder.set(TransactionType.BASE);
+        TransactionTypeHolder.set(TransactionType.BASE);// 每一次操作数据库，都需要加上// 不然就不会当前的seata全局事务管理
         myShardingOrderDOMapper.insertWithGenerator(myShardingOrderDO);
+
+        MyShardingOrderDO myShardingOrderDO2 = new MyShardingOrderDO();
+        myShardingOrderDO2.setStatus("主键自增测试" + 2);
+        myShardingOrderDO2.setUserId(1L);
+        myShardingOrderDO2.setOrderNo("第" + 2 + "单");
+        TransactionTypeHolder.set(TransactionType.BASE);
+        myShardingOrderDOMapper.insertWithGenerator(myShardingOrderDO2);
 //        int i =1/0;
         OrderDO orderDO = new OrderDO();
         orderDO.setStatus("主键自增测试");
@@ -53,7 +61,7 @@ public class TetsController {
         System.out.println(orderDO.getOrderId());
         TransactionTypeHolder.set(TransactionType.BASE);
         orderDOMapper.insert(orderDO);
-//        int i =1/0;
+        int i =1/0;
 //        httprequest();
         System.out.println("========================end=======================");
     }

@@ -3,6 +3,7 @@ package com.example.shardingsphere.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import io.seata.rm.datasource.DataSourceProxy;
+import io.seata.spring.annotation.datasource.EnableAutoDataSourceProxy;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -46,6 +47,11 @@ public class MainDataSourceConfig {
         return dataSource;
     }
 
+    /**
+     * 使用seata-proxy代理数据源，这样才能被seata管理，分布式事务才会涵盖到这个数据源
+     * @param dataSource
+     * @return
+     */
     @Bean(name = "mainDataSourceProxy")
     public DataSourceProxy goodsdbDataSourceProxy(@Qualifier("mainDataSource") DataSource dataSource) {
         //DataSourceProxy dsproxy = new DataSourceProxy(dataSource,"my_test_tx_group");
@@ -53,6 +59,10 @@ public class MainDataSourceConfig {
         return dsproxy;
     }
 
+    /**
+     * @param dataSource mainDataSourceProxy 使用seata代理数据源，这样才能被seata管理，分布式事务才会涵盖到这个数据源
+     * @return
+     */
     @Bean(name = "mainTransactionManager")
     public DataSourceTransactionManager mainTransactionManager(@Qualifier("mainDataSourceProxy")DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
