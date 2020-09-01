@@ -103,8 +103,6 @@ N.idea/libraries/Maven__org_apache_shardingsphere_sharding_core_route_4_1_0.xml
 M.idea/libraries/Maven__org_apache_shardingsphere_sharding_jdbc_core_4_1_0.xml,7\9\7905074cb7aa1f22951d5e06383d42e5e72d5329
 å
 \.idea/libraries/Maven__org_apache_shardingsphere_sharding_jdbc_spring_boot_starter_4_1_0.xml,5\2\525b4044b4a0cc63f25ae8530a19f562d20c31c5
-â
-Y.idea/libraries/Maven__org_apache_shardingsphere_sharding_jdbc_spring_namespace_4_1_0.xml,d\e\def989248ac8957d63a2461ecca1745f48fb8367
 Ñ
 T.idea/libraries/Maven__org_apache_shardingsphere_sharding_spring_boot_util_4_1_0.xml,7\e\7e7919436cd292b16deffd0ec356b5a07d38d51c
 ç

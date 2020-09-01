@@ -4,6 +4,7 @@ import com.example.shardingsphere.dao.main.OrderDOMapper;
 import com.example.shardingsphere.dao.sharding.MyShardingOrderDOMapper;
 import com.example.shardingsphere.entity.MyShardingOrderDO;
 import com.example.shardingsphere.entity.OrderDO;
+import io.seata.common.util.StringUtils;
 import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.apache.shardingsphere.transaction.core.TransactionType;
@@ -18,8 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * @author 莫虎
@@ -35,16 +41,16 @@ public class TetsController {
     @Autowired
     private OrderDOMapper orderDOMapper;
 
-    @GlobalTransactional(timeoutMills = 10000,rollbackFor = Exception.class)
+    @GlobalTransactional(timeoutMills = 20000,rollbackFor = Exception.class)
     @GetMapping("/test")
     void test2() {
         System.out.println("=================================start===============================");
-        MyShardingOrderDO myShardingOrderDO = new MyShardingOrderDO();
-        myShardingOrderDO.setStatus("主键自增测试" + 1);
-        myShardingOrderDO.setUserId(1L);
-        myShardingOrderDO.setOrderNo("第" + 1 + "单");
-        TransactionTypeHolder.set(TransactionType.BASE);// 每一次操作数据库，都需要加上// 不然就不会当前的seata全局事务管理
-        myShardingOrderDOMapper.insertWithGenerator(myShardingOrderDO);
+//        MyShardingOrderDO myShardingOrderDO = new MyShardingOrderDO();
+//        myShardingOrderDO.setStatus("主键自增测试" + 1);
+//        myShardingOrderDO.setUserId(1L);
+//        myShardingOrderDO.setOrderNo("第" + 1 + "单");
+//        TransactionTypeHolder.set(TransactionType.BASE);// 每一次操作数据库，都需要加上// 不然就不会当前的seata全局事务管理
+//        myShardingOrderDOMapper.insertWithGenerator(myShardingOrderDO);
 
         MyShardingOrderDO myShardingOrderDO2 = new MyShardingOrderDO();
         myShardingOrderDO2.setStatus("主键自增测试" + 2);
@@ -57,17 +63,19 @@ public class TetsController {
         orderDO.setStatus("主键自增测试");
         orderDO.setUserId(11);
         orderDO.setOrderNo("第" + new Random().nextInt(11) + "单");
-        orderDO.setOrderId(11L);
+        orderDO.setOrderId(new Random().nextLong());
         System.out.println(orderDO.getOrderId());
         TransactionTypeHolder.set(TransactionType.BASE);
         orderDOMapper.insert(orderDO);
-        int i =1/0;
 //        httprequest();
+        if (orderDO.getOrderId() % 2 > 0) {
+            int i =1/0;
+        }
         System.out.println("========================end=======================");
     }
 
     /**
-     * 调用其他服务，实现分布式事务管理
+     * 调用其他服务,验证跨服务的分布式事务，这里就启动两个服务,其中一个调用另一个来实验
      */
     private void httprequest() {
         RestTemplate restTemplate = new RestTemplate();
@@ -75,9 +83,9 @@ public class TetsController {
         System.out.println("RootContext.getXID():" + RootContext.getXID());
         headers.add("TX_XID".toLowerCase(), RootContext.getXID());
         HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
-        String url = "http://127.0.0.1:8080/home/addorder?orderid=2002&isfail=1";
+        String url = "http://127.0.0.1:8081/test";
         ResponseEntity<String> resEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
         System.out.println("response=============================:" + resEntity.toString());
-
     }
+
 }

@@ -25,13 +25,14 @@ public class SeataFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String xid = req.getHeader(RootContext.KEY_XID.toLowerCase());
-        System.out.println("xid:"+xid);
+        System.out.println("seata_transaction_request_xid:"+xid);
         boolean isBind = false;
         if (StringUtils.isNotBlank(xid)) {
-            //如果xid不为空，则RootContext需要绑定xid,供给seata识别这是同一个分布式事务
+            //RootContext绑定xid，即绑定同一个分布式事务
             RootContext.bind(xid);
             isBind = true;
         }
+        // 执行完请求后一定要解绑
         try {
             filterChain.doFilter(servletRequest, servletResponse);
         } finally {

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="target4">
+    <CLASSES>
+      <root url="jar://E:/download/apache-shardingsphere-4.1.0-src/apache-shardingsphere-4.1.0-src-release/sharding-spring/sharding-jdbc-spring/sharding-jdbc-spring-namespace/target/apache-shardingsphere-4.1.0-javadoc.jar!/" />
+      <root url="jar://E:/download/apache-shardingsphere-4.1.0-src/apache-shardingsphere-4.1.0-src-release/sharding-spring/sharding-jdbc-spring/sharding-jdbc-spring-namespace/target/apache-shardingsphere-4.1.0-sources.jar!/" />
+      <root url="jar://E:/download/apache-shardingsphere-4.1.0-src/apache-shardingsphere-4.1.0-src-release/sharding-spring/sharding-jdbc-spring/sharding-jdbc-spring-namespace/target/apache-shardingsphere-4.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

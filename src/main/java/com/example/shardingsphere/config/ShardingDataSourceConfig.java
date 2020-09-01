@@ -59,24 +59,6 @@ public class ShardingDataSourceConfig {
     @Bean(name = "shardingDataSource")
     public DataSource shardingDataSource() throws SQLException {
 
-//        Map<String, DataSource> dataSourceMap = new HashMap<>();
-//        // 配置第一个数据源
-//        DruidDataSource dataSource1 = new DruidDataSource();
-//        dataSource1.setDriverClassName("com.mysql.cj.jdbc.Driver");
-//        dataSource1.setUrl("jdbc:mysql://49.233.87.32:3306/sharding_1?characterEncoding=utf-8");
-//        dataSource1.setUsername("root");
-//        dataSource1.setPassword("yzsydm");
-//        dataSourceMap.put("ds1", dataSource1);
-//
-//        // 配置第二个数据源
-//        DruidDataSource dataSource2 = new DruidDataSource();
-//        dataSource2.setDriverClassName("com.mysql.cj.jdbc.Driver");
-//        dataSource2.setUrl("jdbc:mysql://49.233.87.32:3306/sharding_2?characterEncoding=utf-8");
-//        dataSource2.setUsername("root");
-//        dataSource2.setPassword("yzsydm");
-//        dataSourceMap.put("ds2", dataSource2);
-
-
         Map<String, DataSource> dataSourceMap = new HashMap<>();
         // 配置第一个数据源
         DruidDataSource dataSource1 = new DruidDataSource();
@@ -95,14 +77,14 @@ public class ShardingDataSourceConfig {
         dataSourceMap.put("ds2", dataSource2);
 
 
-        // 配置库表规则
+        // 针对逻辑表my_sharding进行配置
         TableRuleConfiguration orderTableRuleConfig = new TableRuleConfiguration("my_sharding","ds$->{1..2}.my_sharding_$->{1..2}");
-
         // 配置分库 + 分表策略 + 分布式主键
         orderTableRuleConfig.setDatabaseShardingStrategyConfig(new InlineShardingStrategyConfiguration("user_id", "ds$->{user_id % 2 + 1}"));
         orderTableRuleConfig.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration("order_id", "my_sharding_$->{order_id % 2 + 1}"));
         orderTableRuleConfig.setKeyGeneratorConfig(new KeyGeneratorConfiguration("SNOWFLAKE", "order_id"));
-        // 配置分片规则
+
+        // 添加以上规则，如果有多个逻辑表，可以配置多个加入到shardingRuleConfig
         ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
         shardingRuleConfig.getTableRuleConfigs().add(orderTableRuleConfig);
 
@@ -136,7 +118,6 @@ public class ShardingDataSourceConfig {
         return sessionFactory.getObject();
     }
 
-    // 创建SqlSessionTemplate
     @Bean(name = "shardingSqlSessionTemplate")
     public SqlSessionTemplate shardingSqlSessionTemplate(@Qualifier("shardingSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);

@@ -4,6 +4,6 @@
     <option name="branch" value="master" />
     <option name="gitUrl" value="https://github.com/yangzhouhu/shardingsphere-springboot.git" />
     <option name="localBranch" value="master" />
-    <option name="revision" value="f50dfb700ba06156b816afc30a25fc7faccb76dc" />
+    <option name="revision" value="5876282f39dd138a2ff71303c027e21e51813209" />
   </component>
 </project>

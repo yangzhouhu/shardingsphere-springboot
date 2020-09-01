@@ -78,7 +78,6 @@ public class MainDataSourceConfig {
         return sessionFactory.getObject();
     }
 
-    // 创建SqlSessionTemplate
     @Bean(name = "mainSqlSessionTemplate")
     public SqlSessionTemplate goodsdbSqlSessionTemplate(@Qualifier("mainSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
