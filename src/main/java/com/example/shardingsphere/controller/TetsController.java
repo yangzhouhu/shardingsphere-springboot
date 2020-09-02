@@ -1,7 +1,11 @@
 package com.example.shardingsphere.controller;
 
 import com.example.shardingsphere.dao.main.OrderDOMapper;
+import com.example.shardingsphere.dao.sharding.BroadTableDOMapper;
+import com.example.shardingsphere.dao.sharding.DefaultTableDOMapper;
 import com.example.shardingsphere.dao.sharding.MyShardingOrderDOMapper;
+import com.example.shardingsphere.entity.BroadTableDO;
+import com.example.shardingsphere.entity.DefaultTableDO;
 import com.example.shardingsphere.entity.MyShardingOrderDO;
 import com.example.shardingsphere.entity.OrderDO;
 import io.seata.common.util.StringUtils;
@@ -87,5 +91,42 @@ public class TetsController {
         ResponseEntity<String> resEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
         System.out.println("response=============================:" + resEntity.toString());
     }
+
+
+    @Autowired
+    private BroadTableDOMapper broadTableDOMapper;
+
+    /**
+     * 测试广播表
+     */
+    @GlobalTransactional(timeoutMills = 20000,rollbackFor = Exception.class)
+    @GetMapping("/test-broad")
+    void testBroadTable() {
+        BroadTableDO broadTableDO = new BroadTableDO();
+        broadTableDO.setCode("TEST");
+        broadTableDO.setEnable(true);
+        TransactionTypeHolder.set(TransactionType.BASE);
+        broadTableDOMapper.insertGenerator(broadTableDO);
+        broadTableDO.setId(1L);
+        TransactionTypeHolder.set(TransactionType.BASE);
+        broadTableDOMapper.insert(broadTableDO);
+    }
+
+
+
+    @Autowired
+    private DefaultTableDOMapper defaultTableDOMapper;
+    /**
+     * 测试默认分库规则
+     */
+//    @GetMapping("/test-default")
+//    void test3() {
+//        DefaultTableDO defaultTableDO = new DefaultTableDO();
+//        defaultTableDO.setName("TEST_DEFAULT");
+//        defaultTableDO.setEnable(true);
+//        defaultTableDOMapper.insertGenerator(defaultTableDO);
+//        defaultTableDO.setId(1L);
+//        defaultTableDOMapper.insert(defaultTableDO);
+//    }
 
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.shardingsphere.dao.sharding.DefaultTableDOMapper">
+  <resultMap id="BaseResultMap" type="com.example.shardingsphere.entity.DefaultTableDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="enable" jdbcType="BIT" property="enable" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, enable
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from default_table
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from default_table
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.example.shardingsphere.entity.DefaultTableDO">
+    insert into default_table (id, name, enable)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{enable,jdbcType=BIT})
+  </insert>
+  <insert id="insertGenerator" parameterType="com.example.shardingsphere.entity.DefaultTableDO">
+    insert into default_table (name, enable)
+    values (#{name,jdbcType=VARCHAR}, #{enable,jdbcType=BIT})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.example.shardingsphere.entity.DefaultTableDO">
+    insert into default_table
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="enable != null">
+        enable,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="enable != null">
+        #{enable,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.shardingsphere.entity.DefaultTableDO">
+    update default_table
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="enable != null">
+        enable = #{enable,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.shardingsphere.entity.DefaultTableDO">
+    update default_table
+    set name = #{name,jdbcType=VARCHAR},
+      enable = #{enable,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

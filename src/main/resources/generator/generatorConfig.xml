@@ -13,9 +13,9 @@
         </commentGenerator>
         <!--数据库链接URL，用户名、密码 -->
        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://49.233.87.32:3306/order?serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/sharding_1?serverTimezone=Asia/Shanghai&amp;nullCatalogMeansCurrent=true"
                         userId="root"
-                        password="yzsydm">
+                        password="123456">
         </jdbcConnection>
 
         <javaTypeResolver>
@@ -27,15 +27,15 @@
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!-- 生成映射文件的包名和位置-->
-        <sqlMapGenerator targetPackage="mapper.main" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="mapper.sharding" targetProject="src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.shardingsphere.dao.main" targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.example.shardingsphere.dao.sharding" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
-            <table tableName="t_order" domainObjectName="OrderDO" enableCountByExample="false"
+            <table tableName="default_table" domainObjectName="DefaultTableDO" enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
 

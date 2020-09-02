@@ -4,6 +4,10 @@ import org.apache.shardingsphere.shardingjdbc.spring.boot.SpringBootConfiguratio
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * 不开启shardingsphere自动装配
+ */
+
 @SpringBootApplication(exclude = SpringBootConfiguration.class)
 public class ShardingsphereApplication {
 
