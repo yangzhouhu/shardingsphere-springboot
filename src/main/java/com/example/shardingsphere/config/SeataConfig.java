@@ -19,7 +19,7 @@ public class SeataConfig {
 
     @Bean
     public GlobalTransactionScanner getGlobalTransactionScanner() {
-        return new GlobalTransactionScanner("performance", txServiceGroup);
+        return new GlobalTransactionScanner("my_sharding_demo", txServiceGroup);
     }
     @Bean
     public GlobalTransactionalInterceptor globalTransactionalInterceptor(){

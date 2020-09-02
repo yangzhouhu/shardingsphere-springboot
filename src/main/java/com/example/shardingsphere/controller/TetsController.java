@@ -73,6 +73,7 @@ public class TetsController {
         orderDOMapper.insert(orderDO);
 //        httprequest();
         if (orderDO.getOrderId() % 2 > 0) {
+            System.out.println("error=================" + orderDO.getOrderId());
             int i =1/0;
         }
         System.out.println("========================end=======================");

@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * 不开启shardingsphere自动装配
  */
-
 @SpringBootApplication(exclude = SpringBootConfiguration.class)
 public class ShardingsphereApplication {
 
